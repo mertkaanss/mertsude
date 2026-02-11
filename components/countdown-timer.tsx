@@ -41,22 +41,14 @@ export function CountdownTimer() {
       setTime(getTimeElapsed())
     }, 1000)
 
-    // Create audio element
-    audioRef.current = new Audio('/background-music.mp3')
-    audioRef.current.loop = true
-    audioRef.current.volume = 0.3
-
     return () => {
       clearInterval(interval)
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current = null
-      }
     }
   }, [])
 
   const startMusic = () => {
-    if (audioRef.current && audioRef.current.paused) {
+    if (audioRef.current) {
+      console.log("[v0] Attempting to play music")
       audioRef.current.play().catch((err) => {
         console.log("[v0] Audio play error:", err)
       })
@@ -100,6 +92,14 @@ export function CountdownTimer() {
 
   return (
     <div className="flex flex-col items-center gap-6">
+      {/* Background music */}
+      <audio 
+        ref={audioRef}
+        src="/background-music.mp3"
+        loop
+        preload="auto"
+      />
+      
       {/* Main days counter */}
       <div className="text-center">
         <div className="relative">
