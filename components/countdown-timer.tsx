@@ -32,6 +32,7 @@ export function CountdownTimer() {
   const [bekletCount, setBekletCount] = useState(0)
   const [showError, setShowError] = useState(false)
   const [errorCode, setErrorCode] = useState<"404" | "202">("404")
+  const [audioPlaying, setAudioPlaying] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -40,27 +41,23 @@ export function CountdownTimer() {
       setTime(getTimeElapsed())
     }, 1000)
 
-    // Background music setup
-    const audio = new Audio('/background-music.mp3')
-    audio.loop = true
-    audio.volume = 0.3
-    
-    // Try to play music - modern browsers may block autoplay
-    const playAudio = () => {
-      audio.play().catch(() => {
-        // If autoplay is blocked, play on first user interaction
-        document.addEventListener('click', () => audio.play(), { once: true })
-      })
-    }
-    playAudio()
-
     return () => {
       clearInterval(interval)
-      audio.pause()
     }
   }, [])
 
+  const startMusic = () => {
+    if (!audioPlaying) {
+      const audio = new Audio('/background-music.mp3')
+      audio.loop = true
+      audio.volume = 0.3
+      audio.play()
+      setAudioPlaying(true)
+    }
+  }
+
   const handleBeklet = () => {
+    startMusic()
     if (bekletCount === 0) {
       setErrorCode("404")
       setShowError(true)
@@ -79,6 +76,7 @@ export function CountdownTimer() {
   }
 
   const handleAffet = () => {
+    startMusic()
     window.location.href = "https://wa.me/5466733944"
   }
 
