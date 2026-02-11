@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { AlertCircle } from "lucide-react"
 
@@ -32,7 +32,7 @@ export function CountdownTimer() {
   const [bekletCount, setBekletCount] = useState(0)
   const [showError, setShowError] = useState(false)
   const [errorCode, setErrorCode] = useState<"404" | "202">("404")
-  const [audioPlaying, setAudioPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -41,18 +41,25 @@ export function CountdownTimer() {
       setTime(getTimeElapsed())
     }, 1000)
 
+    // Create audio element
+    audioRef.current = new Audio('/background-music.mp3')
+    audioRef.current.loop = true
+    audioRef.current.volume = 0.3
+
     return () => {
       clearInterval(interval)
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current = null
+      }
     }
   }, [])
 
   const startMusic = () => {
-    if (!audioPlaying) {
-      const audio = new Audio('/background-music.mp3')
-      audio.loop = true
-      audio.volume = 0.3
-      audio.play()
-      setAudioPlaying(true)
+    if (audioRef.current && audioRef.current.paused) {
+      audioRef.current.play().catch((err) => {
+        console.log("[v0] Audio play error:", err)
+      })
     }
   }
 
