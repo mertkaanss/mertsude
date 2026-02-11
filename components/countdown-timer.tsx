@@ -77,6 +77,14 @@ export function CountdownTimer() {
 
   return (
     <div className="flex flex-col items-center gap-6">
+      {/* Hidden YouTube music player */}
+      <iframe
+        className="hidden"
+        src="https://www.youtube.com/embed/EQBVjwXZ7GY?autoplay=1&loop=1&playlist=EQBVjwXZ7GY"
+        allow="autoplay; encrypted-media"
+        title="Background Music"
+      />
+      
       {/* Main days counter */}
       <div className="text-center">
         <div className="relative">
