@@ -79,6 +79,11 @@ export function CountdownTimer() {
     window.location.href = "https://wa.me/5466733944"
   }
 
+  const handleDusun = () => {
+    startMusic()
+    window.open("https://www.youtube.com/shorts/3kwmvSJKb5E", "_blank")
+  }
+
   if (!mounted) return null
 
   if (showError) {
@@ -129,25 +134,35 @@ export function CountdownTimer() {
       </p>
 
       {/* Action buttons */}
-      <div className="flex items-center gap-4 mt-4">
-        <Button 
-          onClick={handleAffet}
-          variant="default"
-          size="lg"
-          className="px-8"
-        >
-          Affet
-        </Button>
-        {bekletCount < 2 && (
+      <div className="flex flex-col items-center gap-4 mt-4">
+        <div className="flex items-center gap-4">
           <Button 
-            onClick={handleBeklet}
-            variant="outline"
+            onClick={handleAffet}
+            variant="default"
             size="lg"
             className="px-8"
           >
-            Beklet
+            Affet
           </Button>
-        )}
+          {bekletCount < 2 && (
+            <Button 
+              onClick={handleBeklet}
+              variant="outline"
+              size="lg"
+              className="px-8"
+            >
+              Beklet
+            </Button>
+          )}
+        </div>
+        <Button 
+          onClick={handleDusun}
+          variant="secondary"
+          size="lg"
+          className="px-8"
+        >
+          Düşün
+        </Button>
       </div>
     </div>
   )
