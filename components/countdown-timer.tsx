@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { AlertCircle } from "lucide-react"
 
 interface TimeElapsed {
   days: number
@@ -27,6 +29,9 @@ function getTimeElapsed(): TimeElapsed {
 export function CountdownTimer() {
   const [time, setTime] = useState<TimeElapsed>({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [mounted, setMounted] = useState(false)
+  const [bekletCount, setBekletCount] = useState(0)
+  const [showError, setShowError] = useState(false)
+  const [errorCode, setErrorCode] = useState<"404" | "202">("404")
 
   useEffect(() => {
     setMounted(true)
@@ -37,7 +42,38 @@ export function CountdownTimer() {
     return () => clearInterval(interval)
   }, [])
 
+  const handleBeklet = () => {
+    if (bekletCount === 0) {
+      setErrorCode("404")
+      setShowError(true)
+      setBekletCount(1)
+      setTimeout(() => {
+        setShowError(false)
+      }, 2000)
+    } else if (bekletCount === 1) {
+      setErrorCode("202")
+      setShowError(true)
+      setBekletCount(2)
+      setTimeout(() => {
+        setShowError(false)
+      }, 2000)
+    }
+  }
+
+  const handleAffet = () => {
+    window.location.href = "https://wa.me/5466733944"
+  }
+
   if (!mounted) return null
+
+  if (showError) {
+    return (
+      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-white">
+        <AlertCircle className="w-20 h-20 text-red-500 mb-4" />
+        <h1 className="text-6xl font-bold text-black">{errorCode} HATA</h1>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -66,8 +102,30 @@ export function CountdownTimer() {
 
       {/* Emotional text */}
       <p className="text-foreground/50 text-sm font-sans mt-2 tracking-wide">
-        sessizligin baslangici...
+        sessizligin baslangicindan beri...
       </p>
+
+      {/* Action buttons */}
+      <div className="flex items-center gap-4 mt-4">
+        <Button 
+          onClick={handleAffet}
+          variant="default"
+          size="lg"
+          className="px-8"
+        >
+          Affet
+        </Button>
+        {bekletCount < 2 && (
+          <Button 
+            onClick={handleBeklet}
+            variant="outline"
+            size="lg"
+            className="px-8"
+          >
+            Beklet
+          </Button>
+        )}
+      </div>
     </div>
   )
 }
