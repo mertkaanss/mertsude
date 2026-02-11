@@ -39,7 +39,25 @@ export function CountdownTimer() {
     const interval = setInterval(() => {
       setTime(getTimeElapsed())
     }, 1000)
-    return () => clearInterval(interval)
+
+    // Background music setup
+    const audio = new Audio('/background-music.mp3')
+    audio.loop = true
+    audio.volume = 0.3
+    
+    // Try to play music - modern browsers may block autoplay
+    const playAudio = () => {
+      audio.play().catch(() => {
+        // If autoplay is blocked, play on first user interaction
+        document.addEventListener('click', () => audio.play(), { once: true })
+      })
+    }
+    playAudio()
+
+    return () => {
+      clearInterval(interval)
+      audio.pause()
+    }
   }, [])
 
   const handleBeklet = () => {
@@ -77,14 +95,6 @@ export function CountdownTimer() {
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* Hidden YouTube music player */}
-      <iframe
-        className="hidden"
-        src="https://www.youtube.com/embed/EQBVjwXZ7GY?autoplay=1&loop=1&playlist=EQBVjwXZ7GY"
-        allow="autoplay; encrypted-media"
-        title="Background Music"
-      />
-      
       {/* Main days counter */}
       <div className="text-center">
         <div className="relative">
